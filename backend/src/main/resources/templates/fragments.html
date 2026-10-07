@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <!-- Shared <head> bits: styles for every admin console page -->
+  <th:block th:fragment="common-head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · Admin console'">Admin console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body { font-family: Poppins, system-ui, sans-serif; background: #f1f5f9; margin: 0; color: #0f172a; }
+      .sidebar { position: fixed; width: 230px; height: 100%; background: #1e293b; color: white; padding-top: 20px;
+                 display: flex; flex-direction: column; box-sizing: border-box; }
+      .sidebar h3 { text-align: center; margin: 0 0 16px; font-size: 16px; }
+      .sidebar a { display: block; padding: 11px 14px; margin: 2px 10px; color: white; text-decoration: none; border-radius: 6px; }
+      .sidebar a:hover, .sidebar a.active { background: #334155; }
+      .sidebar .who { margin-top: auto; padding: 14px; font-size: 13px; border-top: 1px solid #334155; }
+      .sidebar .who form { margin-top: 8px; }
+      .sidebar .who button { width: 100%; background: #475569; }
+      .container { margin-left: 250px; padding: 20px; }
+      h2 { margin-top: 0; }
+      .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,.08); margin-bottom: 20px; }
+      form.inline { display: inline; }
+      input, select { padding: 8px; margin: 4px 4px 4px 0; border-radius: 5px; border: 1px solid #cbd5e1; }
+      button { padding: 8px 12px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+      button.danger { background: #e74c3c; }
+      button.edit { background: #27ae60; }
+      table { width: 100%; border-collapse: collapse; background: white; }
+      th { background: #3498db; color: white; padding: 10px; text-align: center; }
+      td { padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+      .error-toast { position: fixed; top: 16px; right: 16px; max-width: 420px; z-index: 10; padding: 12px 16px;
+                     border-radius: 8px; background: #fee2e2; color: #991b1b; font-size: 14px; cursor: pointer;
+                     box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+      .notice { padding: 10px 14px; border-radius: 6px; background: #fef3c7; margin-bottom: 16px; font-size: 14px; }
+    </style>
+  </th:block>
+</head>
+<body>
+
+<!-- Sidebar shared by every admin console page -->
+<div class="sidebar" th:fragment="sidebar(active)">
+  <h3>Admin console</h3>
+  <a href="/" th:classappend="${active == 'home'} ? 'active'">Properties</a>
+  <a href="/agents" th:classappend="${active == 'agents'} ? 'active'">Agents</a>
+  <a href="/clients" th:classappend="${active == 'clients'} ? 'active'">Clients</a>
+  <a href="/transactions" th:classappend="${active == 'transactions'} ? 'active'">Transactions</a>
+  <a href="/features" th:classappend="${active == 'features'} ? 'active'">Features</a>
+  <a href="/logs" th:classappend="${active == 'logs'} ? 'active'">Property Logs</a>
+  <div class="error-toast" th:if="${param.error}" th:text="${param.error[0]}"
+       onclick="this.remove()" title="Click to dismiss">Error</div>
+  <div class="who">
+    Signed in as <strong sec:authentication="name">admin</strong>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit">Sign out</button>
+    </form>
+  </div>
+</div>
+
+<!-- Shared script: Edit buttons copy their data-* attributes into form fields -->
+<script th:fragment="fill-script">
+  // <button data-fill-form="formId" data-address="..."> fills #formId [name=address] etc.
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-fill-form]");
+    if (!btn) return;
+    var form = document.getElementById(btn.dataset.fillForm);
+    Object.keys(btn.dataset).forEach(function (key) {
+      if (key === "fillForm") return;
+      var field = form.querySelector("[name='" + key + "']");
+      if (field) field.value = btn.dataset[key];
+    });
+    form.scrollIntoView({ behavior: "smooth" });
+  });
+</script>
+
+</body>
+</html>

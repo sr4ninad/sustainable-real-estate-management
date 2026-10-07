@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Properties')}"></th:block>
+  <style>
+    header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 20px; text-align: center; font-size: 22px; }
+    .grid { display: flex; gap: 20px; flex-wrap: wrap; }
+    .grid .card { flex: 1; min-width: 300px; }
+    .grid input { width: 100%; box-sizing: border-box; }
+    .grid button { width: 100%; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('home')}"></div>
+
+<div class="container">
+  <header>Sustainable Real Estate Management System</header>
+
+  <div class="grid" style="margin-top: 20px;">
+    <div class="card">
+      <h2>Add Property</h2>
+      <form th:action="@{/addProperty}" method="post">
+        <input type="number" name="propertyId" placeholder="Property ID" required min="1">
+        <input type="text" name="address" placeholder="Address" required>
+        <input type="text" name="type" placeholder="Type (Apartment, Villa, Commercial…)">
+        <input type="number" name="size" placeholder="Size (sq ft)" min="1">
+        <input type="number" name="price" placeholder="Price" required min="1">
+        <input type="number" name="agentId" placeholder="Agent ID">
+        <button type="submit">Add Property</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Update Property</h2>
+      <form id="update-form" th:action="@{/updateProperty}" method="post">
+        <input type="number" name="propertyId" placeholder="Property ID" required min="1">
+        <input type="text" name="address" placeholder="Address (leave blank to keep)">
+        <input type="text" name="type" placeholder="Type (leave blank to keep)">
+        <input type="number" name="price" placeholder="Price" required min="1">
+        <button type="submit">Update Property</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>All Properties</h2>
+    <table>
+      <tr>
+        <th>ID</th><th>Address</th><th>Type</th><th>Price</th><th>Status</th><th>Actions</th>
+      </tr>
+      <tr th:each="p : ${properties}">
+        <td th:text="${p.propertyId}"></td>
+        <td th:text="${p.address}"></td>
+        <td th:text="${p.type}"></td>
+        <td th:text="${#numbers.formatDecimal(p.price, 1, 'COMMA', 0, 'POINT')}"></td>
+        <td th:text="${p.availabilityStatus}"></td>
+        <td>
+          <button type="button" class="edit" data-fill-form="update-form"
+                  th:data-property-id="${p.propertyId}" th:data-address="${p.address}"
+                  th:data-type="${p.type}" th:data-price="${p.price}">Edit</button>
+          <form class="inline" th:action="@{/deleteProperty/{id}(id=${p.propertyId})}" method="post"
+                onsubmit="return confirm('Delete this property?')">
+            <button type="submit" class="danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script th:replace="~{fragments :: fill-script}"></script>
+</body>
+</html>

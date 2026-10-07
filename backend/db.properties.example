@@ -1,0 +1,13 @@
+# Copy to db.properties (git-ignored) and fill in your values.
+DB_URL=jdbc:mysql://localhost:3306/sustainable_real_estate
+DB_USERNAME=root
+DB_PASSWORD=change-me
+
+# Admin login for the app (created on first start if missing).
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change-me
+
+# Demo logins for every agent/client (set DEMO_USERS=false to disable)
+DEMO_USERS=true
+DEMO_AGENT_PASSWORD=agent123
+DEMO_CLIENT_PASSWORD=client123

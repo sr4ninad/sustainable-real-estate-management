@@ -1,0 +1,17 @@
+# Secrets
+backend/db.properties
+.env
+.env.*
+!.env.example
+
+# Build output & dependencies
+node_modules/
+dist/
+target/
+
+# Editors & OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Features')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('features')}"></div>
+
+<div class="container">
+  <h2>Features</h2>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Property</th><th>Solar</th><th>Rain</th><th>Waste</th>
+    </tr>
+    <tr th:each="f : ${features}">
+      <td th:text="${f.featureId}"></td>
+      <td th:text="${f.propertyId}"></td>
+      <td th:text="${f.solarPanels}"></td>
+      <td th:text="${f.rainwaterHarvesting}"></td>
+      <td th:text="${f.wasteManagement}"></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

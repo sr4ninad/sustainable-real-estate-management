@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Clients')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('clients')}"></div>
+
+<div class="container">
+  <h2>Clients</h2>
+
+  <div class="card">
+    <form id="client-form" th:action="@{/addClient}" method="post">
+      <input name="clientId" placeholder="ID" type="number" min="1" required>
+      <input name="name" placeholder="Name" required>
+      <input name="contactNo" placeholder="Contact" maxlength="15">
+      <input name="email" placeholder="Email" type="email">
+      <select name="type" required>
+        <option value="">Select Type</option>
+        <option value="Buyer">Buyer</option>
+        <option value="Renter">Renter</option>
+        <option value="Seller">Seller</option>
+      </select>
+      <button type="submit">Add / Update</button>
+    </form>
+  </div>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Name</th><th>Contact</th><th>Email</th><th>Type</th><th>Action</th>
+    </tr>
+    <tr th:each="c : ${clients}">
+      <td th:text="${c.clientId}"></td>
+      <td th:text="${c.name}"></td>
+      <td th:text="${c.contactNo}"></td>
+      <td th:text="${c.email}"></td>
+      <td th:text="${c.type}"></td>
+      <td>
+        <button type="button" class="edit" data-fill-form="client-form"
+                th:data-client-id="${c.clientId}" th:data-name="${c.name}" th:data-contact-no="${c.contactNo}"
+                th:data-email="${c.email}" th:data-type="${c.type}">Edit</button>
+        <form class="inline" th:action="@{/deleteClient/{id}(id=${c.clientId})}" method="post"
+              onsubmit="return confirm('Delete this client?')">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script th:replace="~{fragments :: fill-script}"></script>
+</body>
+</html>

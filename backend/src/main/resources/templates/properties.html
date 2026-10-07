@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Properties')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('home')}"></div>
+
+<div class="container">
+  <h2>Properties</h2>
+
+  <div class="card">
+    <form id="property-form" th:action="@{/addProperty}" method="post">
+      <input type="hidden" name="returnTo" value="/properties">
+      <input name="propertyId" placeholder="ID" type="number" min="1" required>
+      <input name="address" placeholder="Address" required>
+      <input name="type" placeholder="Type">
+      <input name="price" placeholder="Price" type="number" min="1" required>
+      <input name="agentId" placeholder="Agent ID" type="number">
+      <button type="submit">Add / Update</button>
+    </form>
+  </div>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Address</th><th>Type</th><th>Price</th><th>Agent</th><th>Action</th>
+    </tr>
+    <tr th:each="p : ${properties}">
+      <td th:text="${p.propertyId}"></td>
+      <td th:text="${p.address}"></td>
+      <td th:text="${p.type}"></td>
+      <td th:text="${#numbers.formatDecimal(p.price, 1, 'COMMA', 0, 'POINT')}"></td>
+      <td th:text="${p.agentId}"></td>
+      <td>
+        <button type="button" class="edit" data-fill-form="property-form"
+                th:data-property-id="${p.propertyId}" th:data-address="${p.address}" th:data-type="${p.type}"
+                th:data-price="${p.price}" th:data-agent-id="${p.agentId}">Edit</button>
+        <form class="inline" th:action="@{/deleteProperty/{id}(id=${p.propertyId})}" method="post"
+              onsubmit="return confirm('Delete this property?')">
+          <input type="hidden" name="returnTo" value="/properties">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script th:replace="~{fragments :: fill-script}"></script>
+</body>
+</html>

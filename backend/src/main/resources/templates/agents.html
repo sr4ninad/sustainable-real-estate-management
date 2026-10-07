@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Agents')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('agents')}"></div>
+
+<div class="container">
+  <h2>Agents</h2>
+
+  <div class="card">
+    <form id="agent-form" th:action="@{/addAgent}" method="post">
+      <input name="agentId" placeholder="ID" type="number" min="1" required>
+      <input name="name" placeholder="Name" required>
+      <input name="contactNo" placeholder="Contact" maxlength="15">
+      <input name="email" placeholder="Email" type="email">
+      <button type="submit">Add / Update</button>
+    </form>
+  </div>
+
+  <table>
+    <tr><th>ID</th><th>Name</th><th>Contact</th><th>Email</th><th>Action</th></tr>
+    <tr th:each="a : ${agents}">
+      <td th:text="${a.agentId}"></td>
+      <td th:text="${a.name}"></td>
+      <td th:text="${a.contactNo}"></td>
+      <td th:text="${a.email}"></td>
+      <td>
+        <button type="button" class="edit" data-fill-form="agent-form"
+                th:data-agent-id="${a.agentId}" th:data-name="${a.name}"
+                th:data-contact-no="${a.contactNo}" th:data-email="${a.email}">Edit</button>
+        <form class="inline" th:action="@{/deleteAgent/{id}(id=${a.agentId})}" method="post"
+              onsubmit="return confirm('Delete this agent?')">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script th:replace="~{fragments :: fill-script}"></script>
+</body>
+</html>

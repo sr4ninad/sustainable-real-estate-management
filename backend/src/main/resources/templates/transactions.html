@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Transactions')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('transactions')}"></div>
+
+<div class="container">
+  <h2>Transactions</h2>
+
+  <div class="card">
+    <form th:action="@{/addTransaction}" method="post">
+      <input name="transactionId" placeholder="ID" type="number" min="1" required>
+      <input name="propertyId" placeholder="Property ID" type="number" min="1" required>
+      <input name="clientId" placeholder="Client ID" type="number" min="1" required>
+      <input name="amount" placeholder="Amount" type="number" min="1" required>
+      <input name="date" type="date" title="Leave empty for today">
+      <button type="submit">Add</button>
+    </form>
+  </div>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Date</th><th>Property</th><th>Client</th><th>Amount</th><th>Action</th>
+    </tr>
+    <tr th:each="t : ${transactions}">
+      <td th:text="${t.transactionId}"></td>
+      <td th:text="${t.date}"></td>
+      <td th:text="${t.propertyId}"></td>
+      <td th:text="${t.clientId}"></td>
+      <td th:text="${#numbers.formatDecimal(t.amount, 1, 'COMMA', 0, 'POINT')}"></td>
+      <td>
+        <form class="inline" th:action="@{/deleteTransaction/{id}(id=${t.transactionId})}" method="post"
+              onsubmit="return confirm('Delete this transaction? The property will be relisted.')">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments :: common-head('Property Logs')}"></th:block>
+</head>
+<body>
+
+<div th:replace="~{fragments :: sidebar('logs')}"></div>
+
+<div class="container">
+  <h2>Property Logs</h2>
+
+  <table>
+    <tr>
+      <th>ID</th><th>Property</th><th>Old</th><th>New</th><th>Time</th>
+    </tr>
+    <tr th:each="l : ${logs}">
+      <td th:text="${l.logId}"></td>
+      <td th:text="${l.propertyId}"></td>
+      <td th:text="${#numbers.formatDecimal(l.oldPrice, 1, 'COMMA', 0, 'POINT')}"></td>
+      <td th:text="${#numbers.formatDecimal(l.newPrice, 1, 'COMMA', 0, 'POINT')}"></td>
+      <td th:text="${l.updatedAt}"></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

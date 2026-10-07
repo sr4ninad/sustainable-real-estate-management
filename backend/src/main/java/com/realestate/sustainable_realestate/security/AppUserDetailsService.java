@@ -1,0 +1,23 @@
+package com.realestate.sustainable_realestate.security;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AppUserDetailsService implements UserDetailsService {
+
+    private final AppUserRepository users;
+
+    public AppUserDetailsService(AppUserRepository users) {
+        this.users = users;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return users.findByUsernameIgnoreCase(username.trim())
+                .map(AuthUser::new)
+                .orElseThrow(() -> new UsernameNotFoundException("Unknown user: " + username));
+    }
+}
